@@ -1,0 +1,69 @@
+<script>
+  export default {
+    data () {
+      return {
+        enabled: true,
+        version: 'v3.1'
+      }
+    },
+
+    oncreate () {
+      if (window.fbq) {
+				this.set({ fbq: window.fbq })
+        return
+      }
+			
+      const { version, pixelId, track, enabled } = this.get()
+
+      if (!pixelId) {
+        throw new Error('pixelId configuration parameter is required, try <FacebookPixel pixelId="12345" />')
+      }
+
+      /* eslint-disable */
+      const scr = (f, b, e, v, n, t, s) => {
+        if (f.fbq) return; n = f.fbq = function () {
+          n.callMethod ?
+            n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+        };
+        if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = version;
+        n.queue = [];
+        t = b.createElement(e);
+        t.async = true;
+        t.defer = true;
+        t.src = v;
+        s = b.getElementsByTagName('body')[0];
+        s.parentNode.appendChild(t, s);
+      }
+			
+			scr(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js')
+      /* eslint-enable */
+
+			this.set({ fbq: window.fbq })
+			
+      if (enabled) {
+        this.enable()
+      }
+    },
+
+    methods: {
+      enable () {
+        this.init()
+        this.track()
+      },
+
+      init () {
+        const { pixelId } = this.get()
+        this.query('init', pixelId)
+      },
+
+      track (event = 'PageView', data = undefined) {
+        this.query('track', event, data)
+      },
+
+      query (cmd, option) {
+        const { fbq } = this.get()
+        fbq(cmd, option)
+      }
+    }
+  }
+</script>
