@@ -13,7 +13,9 @@
     "rollup-plugin-svelte": "^4.1.0",
     "svelte": "^1.60.0"
   },
-  "keywords": ["svelte"],
+  "keywords": [
+    "svelte"
+  ],
   "files": [
     "src",
     "index.mjs",
