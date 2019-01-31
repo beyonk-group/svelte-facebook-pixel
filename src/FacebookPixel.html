@@ -8,16 +8,18 @@
     },
 
     oncreate () {
-      if (window.fbq) {
-				this.set({ fbq: window.fbq })
-        return
-      }
-			
-      const { version, pixelId, track, enabled } = this.get()
+      const { pixelId } = this.get()
 
       if (!pixelId) {
         throw new Error('pixelId configuration parameter is required, try <FacebookPixel pixelId="12345" />')
       }
+
+      if (window['fbq'][pixelId]) {
+				this.set({ fbq: window['fbq'][pixelId] })
+        return
+      }
+			
+      const { version, track, enabled } = this.get()
 
       /* eslint-disable */
       const scr = (f, b, e, v, n, t, s) => {
@@ -38,7 +40,7 @@
 			scr(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js')
       /* eslint-enable */
 
-			this.set({ fbq: window.fbq })
+			this.set({ fbq: window['fbq'][pixelId] })
 			
       if (enabled) {
         this.enable()
