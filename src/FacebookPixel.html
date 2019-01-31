@@ -8,14 +8,19 @@
     },
 
     oncreate () {
-      const { pixelId } = this.get()
+      const { id } = this.get()
 
-      if (!pixelId) {
-        throw new Error('pixelId configuration parameter is required, try <FacebookPixel pixelId="12345" />')
+      if (!id) {
+        throw new Error(
+          `id configuration parameter is required, try <FacebookPixel id="12345" /> or <FacebookPixel id="['12345', '67890']" /> for multiple pixels`
+        )
       }
 
-      if (window['fbq'][pixelId]) {
-				this.set({ fbq: window['fbq'][pixelId] })
+      const pixels = Array.isArray(id) ? id : [ id ]
+      this.set({ pixels })
+
+      if (window['fbq']) {
+				this.set({ fbq: window['fbq']})
         return
       }
 			
@@ -40,7 +45,7 @@
 			scr(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js')
       /* eslint-enable */
 
-			this.set({ fbq: window['fbq'][pixelId] })
+			this.set({ fbq: window['fbq'] })
 			
       if (enabled) {
         this.enable()
@@ -54,17 +59,28 @@
       },
 
       init () {
-        const { pixelId } = this.get()
-        this.query('init', pixelId)
+        const { pixels } = this.get()
+        pixels.forEach(id => {
+          this.query('init', id)
+        })
       },
 
-      track (event = 'PageView', data = undefined) {
-        this.query('track', event, data)
+      track (event = 'PageView', data = undefined, id = undefined) {
+        if (id) {
+          const { pixels } = this.get()
+          if (pixels.includes(id)) {
+            this.query('trackSingle', id, event, data)
+          } else {
+            console.warn('Attempted to send event to unknown pixel', id)
+          }
+        } else {
+          this.query('track', event, data)
+        }
       },
 
-      query (cmd, option) {
+      query (cmd, ...option) {
         const { fbq } = this.get()
-        fbq(cmd, option)
+        fbq(cmd, ...option)
       }
     }
   }
