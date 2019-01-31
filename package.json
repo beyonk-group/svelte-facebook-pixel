@@ -1,6 +1,6 @@
 {
   "name": "@beyonk/svelte-facebook-pixel",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "svelte": "src/FacebookPixel.html",
   "module": "index.mjs",
   "main": "index.js",
