@@ -4,7 +4,7 @@
 
 ## Svelte Facebook Pixel Component
 
-[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com) [![CircleCI](https://circleci.com/gh/beyonk-adventures/svelte-facebook-pixel.svg?style=shield)](https://circleci.com/gh/beyonk-adventures/svelte-facebook-pixel)
+[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com) [![CircleCI](https://circleci.com/gh/beyonk-adventures/svelte-facebook-pixel.svg?style=shield)](https://circleci.com/gh/beyonk-adventures/svelte-facebook-pixel) [![Svelte v3](https://img.shields.io/badge/svelte-v2-orange.svg)](https://v2.svelte.dev) [![Svelte v3](https://img.shields.io/badge/svelte-v3-blueviolet.svg)](https://svelte.dev)
 
 
 Facebook pixel tracking component for Svelte.
@@ -18,24 +18,10 @@ $ npm install --save-dev @beyonk/svelte-facebook-pixel
 ## Usage
 
 ```html
-<FacebookPixel ref:fb {...fbOptions} />
+<FacebookPixel bind:this={fb} id={123} />
 
 <script>
   import FacebookPixel from '@beyonk/svelte-facebook-pixel'
-
-	export default {
-		data () {
-			return {
-				fbOptions: {
-					id: '123'
-				}
-			}
-		},
-		
-		components: {
-			FacebookPixel
-		}
-	}
 </script>
 ```
 
@@ -47,20 +33,17 @@ Simply call the track mehtod:
 
 
 ```html
-<FacebookPixel ref:fb />
+<FacebookPixel bind:this={fb} />
 
 <script>
-  import FacebookPixel from '@beyonk/svelte-facebook-pixel'
+	import FacebookPixel from '@beyonk/svelte-facebook-pixel'
+	import { onMount } from 'svelte
+	
+	let fb
 
-	export default {
-		components: {
-			FacebookPixel
-    }
-    
-    oncreate () {
-      this.refs.fb.track('SomeEvent', { some: 'data' })
-    }
-	}
+	onMount(() => {
+		fb.track('SomeEvent', { some: 'data' })
+	})
 </script>
 ```
 
@@ -69,24 +52,23 @@ Simply call the track mehtod:
 You can have multiple pixels on a page, for instance, if you need a backup pixel, or if you want to send different events to different pixels.
 
 ```html
-<FacebookPixel ref:fb {...fbOptions} />
+<FacebookPixel bind:this={fb} />
+
+<script>
+	import FacebookPixel from '@beyonk/svelte-facebook-pixel'
+	import { onMount } from 'svelte
+	
+	let fb
+
+	onMount(() => {
+		fb.track('SomeEvent', { some: 'data' })
+	})
+</script>
+
+<FacebookPixel ref:fb id={['123', '456']} />
 
 <script>
   import FacebookPixel from '@beyonk/svelte-facebook-pixel'
-
-	export default {
-		data () {
-			return {
-				fbOptions: {
-					id: ['123', '456']
-				}
-			}
-		},
-		
-		components: {
-			FacebookPixel
-		}
-	}
 </script>
 ```
 
@@ -97,7 +79,7 @@ By default all pixels are initialised with `init()`, and events will be sent to 
 You can send tracking events to all pixels just as you would with a single pixel:
 
 ```js
-this.refs.fb.track('SomeEvent', { some: 'data' })
+fb.track('SomeEvent', { some: 'data' })
 ```
 
 #### Sending events to a single pixel
@@ -105,24 +87,21 @@ this.refs.fb.track('SomeEvent', { some: 'data' })
 If you have multiple pixels on your page and want to send an event to only one of them, specify the pixel's id as the last parameter:
 
 ```js
-this.refs.fb.track('SomeEvent', { some: 'data' }, '456')
+fb.track('SomeEvent', { some: 'data' }, '456')
 ```
 
 ## Disabling the pixel (for GDPR)
 
 If you'd like to install the pixel disabled, and enable it later after the user has consented to its use, you can do so by setting `enabled: false` in the pixel configuration:
 
-```js
-fbOptions: {
-  id: 123,
-  enabled: false
-}
+```html
+<FacebookPixel bind:this={fb} enabled={false} />
 ```
 
 Now, in your component, you can call the following in order to start the pixel and track the current page.
 
 ```js
-this.refs.fb.enable()
+fb.enable()
 ```
 
 ## Module options

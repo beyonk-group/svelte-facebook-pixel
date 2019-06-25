@@ -1,7 +1,7 @@
 {
   "name": "@beyonk/svelte-facebook-pixel",
   "version": "1.0.1",
-  "svelte": "src/FacebookPixel.html",
+  "svelte": "src/FacebookPixel.svelte",
   "module": "index.mjs",
   "main": "index.js",
   "scripts": {
@@ -9,12 +9,14 @@
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {
-    "rollup": "^0.57.1",
-    "rollup-plugin-svelte": "^4.1.0",
-    "svelte": "^1.60.0"
+    "rollup": "^1.16.2",
+    "rollup-plugin-svelte": "^5.1.0",
+    "svelte": "^3.5.4"
   },
   "keywords": [
-    "svelte"
+    "svelte",
+    "facebook",
+    "tracking"
   ],
   "files": [
     "src",
