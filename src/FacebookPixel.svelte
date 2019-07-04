@@ -1,25 +1,29 @@
 <script>
-  import { onMount } from 'svelte'
-  
   export let id
   export let enabled = true
   export let version = 'v3.1'
   let pixels
   let _fbq
 
-  onMount(() => {
-    if (!id) {
-      throw new Error(
-        `id configuration parameter is required, try <FacebookPixel id="12345" /> or <FacebookPixel id="['12345', '67890']" /> for multiple pixels`
-      )
-    }
+  export function enable () {
+    mount()
+    init()
+    track()
+  }
 
-    pixels = Array.isArray(id) ? id : [ id ]
-
+  function mount () {
     if (window['fbq']) {
       _fbq = window['fbq']
       return
     }
+
+    if (!id) {
+      throw new Error(
+        `id configuration parameter is required, try <FacebookPixel id="12345" /> or <FacebookPixel id={['12345', '67890']} /> for multiple pixels`
+      )
+    }
+
+    pixels = Array.isArray(id) ? id : [ id ]
 
     /* eslint-disable */
     const scr = (f, b, e, v, n, t, s) => {
@@ -45,11 +49,6 @@
     if (enabled) {
       enable()
     }
-  })
-
-  export function enable () {
-    init()
-    track()
   }
 
   function init () {
