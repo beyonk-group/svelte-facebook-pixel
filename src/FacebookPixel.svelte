@@ -27,9 +27,9 @@
 
     /* eslint-disable */
     const scr = (f, b, e, v, n, t, s) => {
-      if (f.fbq) return; n = f.fbq = function () {
+      if (f.fbq) return; n = f.fbq = function (...args) {
         n.callMethod ?
-          n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+          n.callMethod.apply(n, args) : n.queue.push(args)
       };
       if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = version;
       n.queue = [];
