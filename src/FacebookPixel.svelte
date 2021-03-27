@@ -1,9 +1,13 @@
 <script>
   export let id
-  export let enabled = true
+  export let enabled = false
   export let version = 'v3.1'
   let pixels
   let _fbq
+
+  $: if (enabled) {
+    enable()
+  }
 
   export function enable () {
     mount()
@@ -45,10 +49,6 @@
     /* eslint-enable */
 
     _fbq = window['fbq']
-    
-    if (enabled) {
-      enable()
-    }
   }
 
   function init () {
