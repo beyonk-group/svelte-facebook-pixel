@@ -1,12 +1,10 @@
 <script>
   import { onMount } from 'svelte'
-  import loader from '@beyonk/async-script-loader'
   import { queue } from './queue.js'
 
   export let enabled = true
+  export let version = '2.0'
   export let pixels = []
-
-  let _fbq
 
   onMount(() => {
     if (!enabled) { return }
@@ -14,37 +12,43 @@
   })
 
   export function init () {
-    loader(
-      [
-        {
-          type: 'script',
-          url: 'https://connect.facebook.net/en_US/fbevents.js'
-        }
-      ],
-      test,
-      callback
-    )
+    const fn = !function (f, b, e, v, n, t, s) {
+      if (f.fbq) return
+      n = f.fbq = function () {
+        n.callMethod
+          ? n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+      }
+      if (!f._fbq) f._fbq = n
+      n.push = n
+      n.loaded = !0
+      n.version = version
+      n.queue = []
+      t = b.createElement(e)
+      t.async = !0
+      t.src = v
+      s = b.getElementsByTagName(e)[0]
+      s.parentNode.insertBefore(t, s)
+    }
+
+    fn(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js')
+    callback()
   }
 
-  function test () {
-    return Boolean(window.dataLayer).valueOf() && Array.isArray(window.dataLayer)
-  }
-
-  function query (cmd, params) {
-    _fbq(cmd, ...params)
+  function event (cmd, params) {
+    window.fbq(cmd, ...params)
   }
 
   function callback () {
     if (!window.fbq) { return }
 
-    pixels.forEach(pixel => query('init', [pixel]))
+    pixels.forEach(pixel => event('init', [ pixel ]))
 
     return queue.subscribe(queue => {
       let next = queue.length && queue.shift()
 
       while (next) {
         const { type, params } = next
-        query(type, params)
+        event(type, params)
         next = queue.shift()
       }
     })
