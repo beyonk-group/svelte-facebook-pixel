@@ -1,26 +1,42 @@
 {
-  "name": "@beyonk/svelte-facebook-pixel",
-  "version": "2.1.1",
-  "svelte": "src/FacebookPixel.svelte",
-  "module": "index.mjs",
-  "main": "index.js",
+  "name": "@beyonk/svelte-google-analytics",
+  "svelte": "src/index.js",
+  "module": "dist/index.mjs",
+  "main": "dist/index.js",
   "scripts": {
+    "dev": "WATCH=true nollup -c --hot --port 5000 --content-base ./public -s",
     "build": "rollup -c",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "lint": "eslint . --ext .svelte,.html,.js"
   },
   "devDependencies": {
-    "rollup": "^2.0.5",
-    "rollup-plugin-svelte": "^5.1.1",
-    "svelte": "^3.19.2"
+    "@beyonk/async-script-loader": "^2.2.1",
+    "@beyonk/eslint-config": "^4.2.0",
+    "@rollup/plugin-node-resolve": "^9.0.0",
+    "cheerio": "^1.0.0-rc.3",
+    "eslint": "^7.9.0",
+    "eslint-plugin-svelte3": "^2.7.3",
+    "just-camel-case": "^4.0.2",
+    "just-flatten": "^1.0.0",
+    "node-fetch": "^2.6.1",
+    "nollup": "^0.13.9",
+    "rollup": "^2.26.6",
+    "rollup-plugin-hot": "^0.1.0",
+    "rollup-plugin-svelte": "^6.0.0",
+    "rollup-plugin-svelte-hot": "^0.10.0",
+    "svelte": "^3.24.1",
+    "svelte-feather-icons": "^3.2.2",
+    "svelte-routing": "^1.4.2"
+  },
+  "eslintConfig": {
+    "extends": "@beyonk/eslint-config/svelte"
   },
   "keywords": [
-    "svelte",
-    "facebook",
-    "tracking"
+    "svelte"
   ],
   "files": [
     "src",
-    "index.mjs",
-    "index.js"
-  ]
+    "dist"
+  ],
+  "version": "2.5.1"
 }

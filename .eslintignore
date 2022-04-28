@@ -1,0 +1,4 @@
+node_modules
+dist
+src/functions.js
+example/main.js
