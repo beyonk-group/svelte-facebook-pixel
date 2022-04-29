@@ -12,7 +12,7 @@
   })
 
   export function init () {
-    const fn = !function (f, b, e, v, n, t, s) {
+    const fn = function (f, b, e, v, n, t, s) {
       if (f.fbq) return
       n = f.fbq = function () {
         n.callMethod
