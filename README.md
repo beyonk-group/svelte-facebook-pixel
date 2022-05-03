@@ -22,7 +22,7 @@ $ npm install --save-dev @beyonk/svelte-facebook-pixel
 ## Usage
 
 ```html
-<FacebookPixel bind:this={fb} id={123} />
+<FacebookPixel pixels={[ 'ABC123', '123ABC' ]} />
 
 <script>
   import FacebookPixel from '@beyonk/svelte-facebook-pixel'
@@ -37,13 +37,11 @@ Simply call the track mehtod:
 
 
 ```html
-<FacebookPixel bind:this={fb} />
+<FacebookPixel />
 
 <script>
-	import FacebookPixel from '@beyonk/svelte-facebook-pixel'
+	import { FacebookPixel, fb } from '@beyonk/svelte-facebook-pixel'
 	import { onMount } from 'svelte
-	
-	let fb
 
 	onMount(() => {
 		fb.track('SomeEvent', { some: 'data' })
@@ -56,23 +54,26 @@ Simply call the track mehtod:
 You can have multiple pixels on a page, for instance, if you need a backup pixel, or if you want to send different events to different pixels.
 
 ```html
-<FacebookPixel bind:this={fb} />
+<!-- __layout.svelte -->
+<FacebookPixel />
 
 <script>
-	import FacebookPixel from '@beyonk/svelte-facebook-pixel'
+	import { FacebookPixel, fb } from '@beyonk/svelte-facebook-pixel'
 	import { onMount } from 'svelte
-	
-	let fb
 
 	onMount(() => {
 		fb.track('SomeEvent', { some: 'data' })
 	})
 </script>
 
-<FacebookPixel ref:fb id={['123', '456']} />
+<!-- page.svelte -->
 
 <script>
-  import FacebookPixel from '@beyonk/svelte-facebook-pixel'
+  import { fb } from '@beyonk/svelte-facebook-pixel'
+
+	onMount(() => {
+		fb.track('AnotherEvent', { some: 'data' })
+	})
 </script>
 ```
 
@@ -88,10 +89,10 @@ fb.track('SomeEvent', { some: 'data' })
 
 #### Sending events to a single pixel
 
-If you have multiple pixels on your page and want to send an event to only one of them, specify the pixel's id as the last parameter:
+If you have multiple pixels on your page and want to send an event to only one of them use `trackSingle` and pass the pixel's ID as the first argument:
 
 ```js
-fb.track('SomeEvent', { some: 'data' }, '456')
+fb.trackSingle('ABC123', 'SomeEvent', { some: 'data' })
 ```
 
 ## Disabling the pixel (for GDPR)
@@ -99,24 +100,26 @@ fb.track('SomeEvent', { some: 'data' }, '456')
 If you'd like to install the pixel disabled, and enable it later after the user has consented to its use, you can do so by setting `enabled: false` in the pixel configuration:
 
 ```html
-<FacebookPixel bind:this={fb} enabled={false} />
+<FacebookPixel enabled={false} />
 ```
 
 Now, in your component, you can call the following in order to start the pixel and track the current page.
 
-```js
-fb.enable()
+```html
+<FacebookPixel bind:this={_fb} {enabled} />
+
+<script>
+  import { fb } from '@beyonk/svelte-facebook-pixel'
+
+	let _fb = null
+	let enabled = false
+
+	onMount(() => {
+		enabled = true
+		_fb.init()
+	})
+</script>
 ```
-
-## Module options
-
-List of possible options in the module:
-
-| Option   | Default  | Required | Description                                                                               |
-|----------|----------|----------|-------------------------------------------------------------------------------------------|
-| id  | null     | true     | The unique pixel identifier provided by Facebook.                                         |
-| version  | v3.1     | false    | Tracking version.                                                                         |
-| enabled  | true     | false    | Disable the Pixel by default when initialized. Can be enabled later through `<component>.enable()`. |
 
 ## License
 
