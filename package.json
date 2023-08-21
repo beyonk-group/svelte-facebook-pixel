@@ -1,5 +1,6 @@
 {
   "name": "@beyonk/svelte-facebook-pixel",
+  "type": "module",
   "svelte": "src/index.js",
   "module": "dist/index.mjs",
   "main": "dist/index.js",
