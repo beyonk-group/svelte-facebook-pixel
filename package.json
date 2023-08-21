@@ -1,13 +1,10 @@
 {
   "name": "@beyonk/svelte-facebook-pixel",
   "type": "module",
-  "svelte": "src/index.js",
-  "module": "dist/index.mjs",
-  "main": "dist/index.js",
+  "exports": "src/index.js",
   "scripts": {
     "dev": "WATCH=true nollup -c --hot --port 5000 --content-base ./public -s",
     "build": "rollup -c",
-    "prepublishOnly": "npm run build",
     "lint": "eslint . --ext .svelte,.html,.js"
   },
   "devDependencies": {
@@ -35,8 +32,7 @@
     "svelte"
   ],
   "files": [
-    "src",
-    "dist"
+    "src"
   ],
   "version": "3.0.2"
 }
